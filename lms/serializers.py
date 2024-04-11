@@ -4,8 +4,15 @@ from lms.models import Course, Lesson
 from users.models import User
 
 
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = '__all__'
+
+
 class CourseSerializer(serializers.ModelSerializer):
     lesson_count = serializers.SerializerMethodField()
+    lessons = LessonSerializer(many=True)
 
     class Meta:
         model = Course
@@ -13,15 +20,3 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def get_lesson_count(self, instance):
         return instance.lessons.count()
-
-
-class LessonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lesson
-        fields = '__all__'
-
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('email', 'phone', 'city', 'avatar', 'first_name', 'last_name')
