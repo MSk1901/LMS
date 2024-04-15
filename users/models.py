@@ -34,9 +34,9 @@ class Payment(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
     date = models.DateField(verbose_name='дата оплаты')
-    course_subject = models.ForeignKey(Course, on_delete=models.SET('Удаленный курс'),
+    course_subject = models.ForeignKey(Course, on_delete=models.SET_NULL,
                                        related_name='payments', **NULLABLE)
-    lesson_subject = models.ForeignKey(Lesson, on_delete=models.SET('Удаленный урок'),
+    lesson_subject = models.ForeignKey(Lesson, on_delete=models.SET_NULL,
                                        related_name='payments', **NULLABLE)
     amount = models.DecimalField(max_digits=19, decimal_places=2, verbose_name='сумма оплаты')
     method = models.CharField(choices=PAYMENT_CHOICES, verbose_name='способ оплаты')
