@@ -5,12 +5,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from lms.models import Course, Lesson, Subscription
+from lms.paginators import MyPagination
 from lms.serializers import CourseSerializer, LessonSerializer
 from users.permissions import ManagerPermission, OwnerPermission
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
+    pagination_class = MyPagination
 
     def get_permissions(self):
         if self.action in ('retrieve', 'update', 'partial_update'):
@@ -45,6 +47,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     permission_classes = [ManagerPermission | IsAuthenticated]
+    pagination_class = MyPagination
 
     def get_queryset(self):
         user = self.request.user
