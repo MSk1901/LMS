@@ -15,13 +15,20 @@ class LessonSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     lesson_count = serializers.SerializerMethodField()
-    lessons = LessonSerializer(many=True, read_only=True)
+    lessons = LessonSerializer(many=True, required=False)
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
         fields = '__all__'
         read_only_fields = ['owner']
+
+    def create(self, validated_data):
+        lessons_data = validated_data.pop('lessons', [])
+        course = Course.objects.create(**validated_data)
+        for lesson_data in lessons_data:
+            Lesson.objects.create(course=course, **lesson_data)
+        return course
 
     def get_lesson_count(self, instance):
         return instance.lessons.count()
