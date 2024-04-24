@@ -28,9 +28,9 @@ class CourseViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if ManagerPermission().has_permission(self.request, self):
-            return Course.objects.all()
+            return Course.objects.all().order_by('id')
         else:
-            return Course.objects.filter(owner=user)
+            return Course.objects.filter(owner=user).order_by('id')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -52,9 +52,9 @@ class LessonListAPIView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         if ManagerPermission().has_permission(self.request, self):
-            return Lesson.objects.all()
+            return Lesson.objects.all().order_by('id')
         else:
-            return Lesson.objects.filter(owner=user)
+            return Lesson.objects.filter(owner=user).order_by('id')
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
