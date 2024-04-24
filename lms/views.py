@@ -20,17 +20,20 @@ class CourseViewSet(viewsets.ModelViewSet):
         elif self.action == 'destroy':
             self.permission_classes = [OwnerPermission & IsAuthenticated]
         elif self.action == 'list':
-            self.permission_classes = [ManagerPermission | IsAuthenticated]
+            self.permission_classes = [IsAuthenticated | ManagerPermission]
         elif self.action == 'create':
             self.permission_classes = [~ManagerPermission]
         return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):
-        user = self.request.user
-        if ManagerPermission().has_permission(self.request, self):
-            return Course.objects.all().order_by('id')
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            if ManagerPermission().has_permission(self.request, self):
+                return Course.objects.all().order_by('id')
+            else:
+                return Course.objects.filter(owner=user).order_by('id')
         else:
-            return Course.objects.filter(owner=user).order_by('id')
+            return Course.objects.none()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -46,15 +49,18 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [ManagerPermission | IsAuthenticated]
+    permission_classes = [IsAuthenticated | ManagerPermission]
     pagination_class = MyPagination
 
     def get_queryset(self):
-        user = self.request.user
-        if ManagerPermission().has_permission(self.request, self):
-            return Lesson.objects.all().order_by('id')
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            if ManagerPermission().has_permission(self.request, self):
+                return Lesson.objects.all().order_by('id')
+            else:
+                return Lesson.objects.filter(owner=user).order_by('id')
         else:
-            return Lesson.objects.filter(owner=user).order_by('id')
+            return Lesson.objects.none()
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
