@@ -29,17 +29,19 @@ class Payment(models.Model):
 
     PAYMENT_CHOICES = {
         'cash': 'наличными',
-        'transfer': 'переводом по номеру счета'
+        'card': 'по карте'
     }
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
-    date = models.DateField(verbose_name='дата оплаты')
+    date = models.DateField(auto_now_add=True, verbose_name='дата оплаты')
     course_subject = models.ForeignKey(Course, on_delete=models.SET_NULL,
                                        related_name='payments', **NULLABLE)
     lesson_subject = models.ForeignKey(Lesson, on_delete=models.SET_NULL,
                                        related_name='payments', **NULLABLE)
-    amount = models.DecimalField(max_digits=19, decimal_places=2, verbose_name='сумма оплаты')
+    amount = models.PositiveIntegerField(verbose_name='сумма оплаты')
     method = models.CharField(choices=PAYMENT_CHOICES, verbose_name='способ оплаты')
+    session_id = models.CharField(max_length=255, verbose_name='id сессии', **NULLABLE)
+    link = models.URLField(max_length=400, verbose_name='ссылка на оплату', **NULLABLE)
 
     def __str__(self):
         if self.course_subject:
