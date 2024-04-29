@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from lms.models import Course, Lesson, Subscription
 from lms.paginators import MyPagination
 from lms.serializers import CourseSerializer, LessonSerializer
+from lms.tasks import update_course
 from users.permissions import ManagerPermission, OwnerPermission
 
 
@@ -37,6 +38,11 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        recipients = instance.subscriptions.values_list('user__email', flat=True)
+        update_course.delay(list(recipients), instance.title)
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
