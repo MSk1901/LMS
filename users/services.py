@@ -1,6 +1,11 @@
 import os
+from datetime import timedelta
 
 import stripe
+
+from django.utils import timezone
+
+from users.models import User
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
 
@@ -27,3 +32,12 @@ def create_stripe_session(price_id):
 def get_stripe_payment_status(payment_id):
     session = stripe.checkout.Session.retrieve(payment_id)
     return session.get('payment_status')
+
+
+def block_users():
+    users = User.objects.exclude(last_login__isnull=True)
+    now = timezone.now()
+    for user in users:
+        if now - user.last_login > timedelta(days=31):
+            user.is_active = False
+            user.save()
