@@ -3,6 +3,7 @@ from django.conf import settings
 
 
 def send_update_email(recipients, course_name):
+    """Отправка e-mail об обновлениях в курсе"""
     send_mail(
         'Изменения в курсе',
         f'В курсе {course_name} произошли изменения.\n'
@@ -11,5 +12,3 @@ def send_update_email(recipients, course_name):
         recipients,
         fail_silently=True
     )
-
-

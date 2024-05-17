@@ -5,6 +5,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Course(models.Model):
+    """Модель курса"""
     title = models.CharField(max_length=100, verbose_name='название')
     preview = models.ImageField(upload_to='courses/', verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание', **NULLABLE)
@@ -19,6 +20,7 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
+    """Модель урока"""
     title = models.CharField(max_length=100, verbose_name='название')
     preview = models.ImageField(upload_to='courses/', verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание', **NULLABLE)
@@ -35,6 +37,7 @@ class Lesson(models.Model):
 
 
 class Subscription(models.Model):
+    """Модель подписки"""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='subscriptions')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='subscriptions')
 

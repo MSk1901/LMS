@@ -12,6 +12,7 @@ from users.permissions import ManagerPermission, OwnerPermission
 
 
 class CourseViewSet(viewsets.ModelViewSet):
+    """Вью сет для модели Course"""
     serializer_class = CourseSerializer
     pagination_class = MyPagination
 
@@ -46,6 +47,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
+    """Представление для создания урока"""
     serializer_class = LessonSerializer
     permission_classes = [~ManagerPermission & IsAuthenticated]
 
@@ -54,6 +56,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 
 class LessonListAPIView(generics.ListAPIView):
+    """Представление для просмотра списка уроков"""
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated | ManagerPermission]
     pagination_class = MyPagination
@@ -70,24 +73,27 @@ class LessonListAPIView(generics.ListAPIView):
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
+    """Представление для просмотра одного урока"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [ManagerPermission | OwnerPermission]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
+    """Представление для обновления урока"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [ManagerPermission | OwnerPermission]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
+    """Представление для удаления урока"""
     queryset = Lesson.objects.all()
     permission_classes = [OwnerPermission]
 
 
 class SubscriptionAPIView(APIView):
-
+    """Представление для добавления подписки на курс"""
     def post(self, *args, **kwargs):
         user = self.request.user
         course_id = self.request.data.get('course_id')

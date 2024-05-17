@@ -9,6 +9,7 @@ from users.services import create_stripe_product_with_price, create_stripe_sessi
 
 
 class PaymentListAPIView(generics.ListAPIView):
+    """Представление для просмотра списка платежей"""
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
@@ -17,6 +18,7 @@ class PaymentListAPIView(generics.ListAPIView):
 
 
 class PaymentCreateAPIView(generics.CreateAPIView):
+    """Представление для создания платежа"""
     serializer_class = PaymentSerializer
 
     def perform_create(self, serializer):
@@ -44,6 +46,7 @@ class PaymentCreateAPIView(generics.CreateAPIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """Вью сет для пользователя"""
     serializer_class = UserSerializer
     queryset = User.objects.all()
 

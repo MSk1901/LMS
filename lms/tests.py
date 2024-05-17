@@ -7,6 +7,7 @@ from users.models import User
 
 
 class CourseTestCase(APITestCase):
+    """Тест-сьют для модели Course"""
 
     def setUp(self):
         self.user = User.objects.create(email='test@test.ru')
@@ -82,7 +83,7 @@ class CourseTestCase(APITestCase):
 
 
 class LessonTestCase(APITestCase):
-
+    """Тест-сьют для модели Lesson"""
     def setUp(self):
         self.user = User.objects.create(email='test@test.ru')
         self.lesson = Lesson.objects.create(title='Test lesson',
@@ -161,6 +162,7 @@ class LessonTestCase(APITestCase):
 
 
 class SubscriptionTestCase(APITestCase):
+    """Тест-сьют для модели Subscription"""
     def setUp(self):
         self.user = User.objects.create(email='test@test.ru')
         self.course = Course.objects.create(title='Test Course', owner=self.user)
