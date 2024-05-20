@@ -30,7 +30,7 @@
 
 #### 1. Clone the project:
 ```
-git clone https://github.com/MSk1901/habits.git
+git clone https://github.com/MSk1901/LMS.git
 ```
 #### 2. Navigate to the project root directory
 #### 3. Set up environment variables:

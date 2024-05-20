@@ -30,7 +30,7 @@
 
 #### 1. Клонируйте проект:
 ```
-git clone https://github.com/MSk1901/habits.git
+git clone https://github.com/MSk1901/LMS.git
 ```
 #### 2. Перейдите в корневую директорию проекта 
 #### 3. Настройте переменные окружения: 
