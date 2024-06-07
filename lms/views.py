@@ -46,20 +46,14 @@ class CourseViewSet(viewsets.ModelViewSet):
         update_course.delay(list(recipients), instance.title)
 
 
-class LessonCreateAPIView(generics.CreateAPIView):
-    """Представление для создания урока"""
+class LessonListCreateAPIView(generics.ListCreateAPIView):
+    """Представление для просмотра списка и создания уроков"""
     serializer_class = LessonSerializer
     permission_classes = [~ManagerPermission & IsAuthenticated]
+    pagination_class = MyPagination
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
-
-class LessonListAPIView(generics.ListAPIView):
-    """Представление для просмотра списка уроков"""
-    serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated | ManagerPermission]
-    pagination_class = MyPagination
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -71,25 +65,23 @@ class LessonListAPIView(generics.ListAPIView):
         else:
             return Lesson.objects.none()
 
+    def get_permissions(self):
+        self.permission_classes = [IsAuthenticated | ManagerPermission]
+        if self.request.method == 'POST':
+            self.permission_classes = [~ManagerPermission & IsAuthenticated]
+        return [permission() for permission in self.permission_classes]
 
-class LessonRetrieveAPIView(generics.RetrieveAPIView):
-    """Представление для просмотра одного урока"""
+
+class LessonRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """Представление для просмотра, обновления и удаления одного урока"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [ManagerPermission | OwnerPermission]
 
-
-class LessonUpdateAPIView(generics.UpdateAPIView):
-    """Представление для обновления урока"""
-    queryset = Lesson.objects.all()
-    serializer_class = LessonSerializer
-    permission_classes = [ManagerPermission | OwnerPermission]
-
-
-class LessonDestroyAPIView(generics.DestroyAPIView):
-    """Представление для удаления урока"""
-    queryset = Lesson.objects.all()
-    permission_classes = [OwnerPermission]
+    def get_permissions(self):
+        self.permission_classes = [ManagerPermission | OwnerPermission]
+        if self.request.method == 'DELETE':
+            self.permission_classes = [OwnerPermission]
+        return [permission() for permission in self.permission_classes]
 
 
 class SubscriptionAPIView(APIView):
