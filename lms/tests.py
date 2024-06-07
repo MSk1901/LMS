@@ -15,7 +15,7 @@ class CourseTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_course_retrieve(self):
-        url = reverse('lms:course-detail', args=(self.course.pk,))
+        url = reverse('lms:courses-detail', args=(self.course.pk,))
         response = self.client.get(url)
         data = response.json()
 
@@ -33,7 +33,7 @@ class CourseTestCase(APITestCase):
                          )
 
     def test_course_list(self):
-        url = reverse('lms:course-list')
+        url = reverse('lms:courses-list')
         response = self.client.get(url)
         data = response.json()
 
@@ -58,7 +58,7 @@ class CourseTestCase(APITestCase):
                          )
 
     def test_course_create(self):
-        url = reverse('lms:course-list')
+        url = reverse('lms:courses-list')
         data = {'title': 'Test 2'}
         response = self.client.post(url, data)
 
@@ -66,7 +66,7 @@ class CourseTestCase(APITestCase):
         self.assertEqual(Course.objects.all().count(), 2)
 
     def test_course_update(self):
-        url = reverse('lms:course-detail', args=(self.course.pk,))
+        url = reverse('lms:courses-detail', args=(self.course.pk,))
         data = {'title': 'Test fixed'}
         response = self.client.patch(url, data)
         data = response.json()
@@ -75,7 +75,7 @@ class CourseTestCase(APITestCase):
         self.assertEqual(data.get('title'), 'Test fixed')
 
     def test_course_delete(self):
-        url = reverse('lms:course-detail', args=(self.course.pk,))
+        url = reverse('lms:courses-detail', args=(self.course.pk,))
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -134,7 +134,7 @@ class LessonTestCase(APITestCase):
                          )
 
     def test_lesson_create(self):
-        url = reverse('lms:lesson-create')
+        url = reverse('lms:lessons')
         data = {
             'title': 'Test 2',
             'video_url': 'https://www.youtube.com/watch?v=FyTL1bnUx5I&'
@@ -145,7 +145,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(Lesson.objects.all().count(), 2)
 
     def test_lesson_update(self):
-        url = reverse('lms:lesson-update', args=(self.lesson.pk,))
+        url = reverse('lms:lesson', args=(self.lesson.pk,))
         data = {'title': 'Lesson fixed', 'video_url': 'https://www.youtube.com/watch?v=FyTL1bnUx5I&'}
         response = self.client.patch(url, data)
         data = response.json()
@@ -154,7 +154,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(data.get('title'), 'Lesson fixed')
 
     def test_lesson_delete(self):
-        url = reverse('lms:lesson-delete', args=(self.lesson.pk,))
+        url = reverse('lms:lesson', args=(self.lesson.pk,))
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

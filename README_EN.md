@@ -104,7 +104,7 @@ The Bearer token is passed in the request header. To specify it, you can:
 
 The token value is specified in the format `Bearer <token value>`
 1. Course with lessons creation  
-Available at the endpoint http://localhost:8000/course/ (POST method)  
+Available at the endpoint http://localhost:8000/courses/ (POST method)  
 Example request body:
     ```
     {
